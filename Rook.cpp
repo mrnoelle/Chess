@@ -7,7 +7,7 @@ using namespace std;
 #include "ChessPiece.hpp"
 #include "Rook.hpp"
 
-Rook::Rook (string _name, string _colour): ChessPiece(_name, _colour) 
+Rook::Rook (string piece_name, string piece_colour): ChessPiece(piece_name, piece_colour) 
 {
 
 }
@@ -26,6 +26,7 @@ bool Rook::validMove(string current, string next, ChessBoard* board)
   }
  
   /* no leap over other pieces */
+  /* CASE 1: move along a rank */
   else if (rank_change > 1) { 
   
     for (char i=(char)(min(current[1],next[1])+1); i < max(current[1],next[1]); i++) {
@@ -37,7 +38,7 @@ bool Rook::validMove(string current, string next, ChessBoard* board)
 	
       }
   }
-  
+  /* CASE 2: move along a file */
   else {
     for (char i=(char)(min(current[0],next[0])+1); i<max(current[0],next[0]); i++) {
       string position;

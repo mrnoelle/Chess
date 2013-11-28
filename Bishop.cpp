@@ -7,33 +7,38 @@ using namespace std;
 #include "ChessPiece.hpp"
 #include "Bishop.hpp"
 
-Bishop::Bishop(string _name, string _colour): ChessPiece(_name, _colour) 
+Bishop::Bishop(string piece_name, string piece_colour): ChessPiece(piece_name, piece_colour) 
 {
 
 }
 
 Bishop::~Bishop(){}
 
-bool Bishop::validMove(string current, string next, ChessBoard* board) 
+bool Bishop::validMove(string src, string des, ChessBoard* board) 
 {
 
-  file_change = abs((int)(next[0]-current[0]));
-  rank_change = abs((int)(next[1]-current[1]));
-  
+  file_change = abs((int)(des[0]-src[0]));
+  rank_change = abs((int)(des[1]-src[1]));
+   
   /* move any number of squares diagonally */
-  if (!(rank_change>0 && rank_change==file_change))
+  if (!(rank_change > 0 && rank_change==file_change))   
     return false;
+  
   /* test no leap over */
-  else if (rank_change >1 && rank_change == file_change) {
-    for (char i=(char)(min(current[0],next[0])+1); i<max(current[0],next[0]); i++) {
-      for (char j=(char)(min(current[1],next[1])+1); j<max(current[1],next[1]); j++) {
-	string position;
-	position += i;
-	position += j;
-	if (board->getPos(position) != NULL)
-	  return false;    
-      }
+  else if (rank_change > 1 && rank_change == file_change) {
+
+  int file_dir = (int)(des[0]-src[0])/file_change;
+  int rank_dir = (int)(des[1]-src[1])/file_change;
+  string pos = src;
+
+    for (int i = 1; i < file_change; i++) {
+      
+      pos[0] = src[0] + file_dir*i;
+      pos[1] = src[1] + rank_dir*i;
+      if ( board-> getPos(pos) != NULL)
+	return false;
     }
+  } 
+  else
     return true;
-  }
 }

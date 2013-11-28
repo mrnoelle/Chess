@@ -7,26 +7,26 @@ using namespace std;
 #include "ChessPiece.hpp"
 #include "Pawn.hpp"
 
-Pawn::Pawn (string _name, string _colour, bool _firstMove): ChessPiece(_name, _colour) 
+Pawn::Pawn (string piece_name, string piece_colour, bool _firstMove): ChessPiece(piece_name, piece_colour) 
 {
   firstMove = _firstMove;
 }
 
 Pawn::~Pawn() {}
 
-bool Pawn::validMove(string current, string next, ChessBoard* board)
+bool Pawn::validMove(string src, string des, ChessBoard* board)
 {
   bool pawnState = false;
-  ChessPiece* next_position = board->getPos(next);
+  ChessPiece* next_position = board->getPos(des);
 
   /* move forward */
   if (colour.compare("White")==0) {
-    file_change = (int)(next[0]-current[0]);
-    rank_change = (int)(next[1]-current[1]);
+    file_change = (int)(des[0]-src[0]);
+    rank_change = (int)(des[1]-src[1]);
   }
   else {
-    file_change = (int)(current[0]-next[0]);
-    rank_change = (int)(current[1]-next[1]);
+    file_change = (int)(src[0]-des[0]);
+    rank_change = (int)(src[1]-des[1]);
   }
   
   /* valid move test */
@@ -37,11 +37,11 @@ bool Pawn::validMove(string current, string next, ChessBoard* board)
     }
     /* CASE 2: for the first move, move forward two squares along the file if both are unoccupied */
     else if (firstMove && file_change==0 && rank_change==2) {
-      string position;
-      position += current[0];
-      position += (char)(min(current[1],next[1])+1);
+      string pos;
+      pos += src[0];
+      pos += (char)(min(src[1],des[1])+1);
       
-      if (board->getPos(position) == NULL)
+      if (board->getPos(pos) == NULL)
 	  pawnState = true; 
     }
   }

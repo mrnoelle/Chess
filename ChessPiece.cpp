@@ -1,15 +1,11 @@
-#include<iostream>
-#include<string>
-#include<cmath>
-using namespace std;
-
-#include "ChessBoard.hpp"
 #include "ChessPiece.hpp"
 
-ChessPiece::ChessPiece(string _name, string _colour) 
+using namespace std;
+
+ChessPiece::ChessPiece(string piece_name, string piece_colour) 
 {
-  name = _name;
-  colour = _colour;
+  name = piece_name;
+  colour = piece_colour;
 }
 
 ChessPiece::~ChessPiece()

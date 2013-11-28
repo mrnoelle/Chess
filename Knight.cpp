@@ -1,14 +1,11 @@
 #include<iostream>
 #include<string>
 #include<cmath>
+#include "Knight.hpp"
 
 using namespace std;
 
-#include "ChessBoard.hpp"
-#include "ChessPiece.hpp"
-#include "Knight.hpp"
-
-Knight::Knight(string _name, string _colour): ChessPiece(_name, _colour) 
+Knight::Knight(string piece_name, string piece_colour): ChessPiece(piece_name, piece_colour) 
 {
 
 }

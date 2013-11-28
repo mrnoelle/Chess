@@ -29,4 +29,4 @@ Pawn.o: Pawn.cpp ChessPiece.hpp Pawn.hpp
 	g++ -Wall -c -g Pawn.cpp
 
 clean:
-	rm -f ChessMain *.o
+	rm -f Chess *.o

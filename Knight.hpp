@@ -1,10 +1,13 @@
 #ifndef KNIGHT_H
 #define KNIGHT_H
 
-class Knight: public ChessPiece {
+#include "ChessPiece.hpp"
+
+class Knight: public ChessPiece 
+{
 
  public:
-  Knight (string _name, string _colour);
+  Knight (string piece_name, string piece_colour);
 
   ~Knight();
   

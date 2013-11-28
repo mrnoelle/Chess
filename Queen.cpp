@@ -7,7 +7,7 @@ using namespace std;
 #include "ChessPiece.hpp"
 #include "Queen.hpp"
 
-Queen::Queen (string _name, string _colour): ChessPiece(_name, _colour) 
+Queen::Queen (string piece_name, string piece_colour): ChessPiece(piece_name, piece_colour) 
 {
 
 }

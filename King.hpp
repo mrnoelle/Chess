@@ -1,15 +1,18 @@
 #ifndef KING_H
 #define KING_H
 
+
+#include "ChessPiece.hpp"
+
 class King: public ChessPiece 
 {
 
  public:
-  King(string _name, string _colour);
+  King(string piece_name, string piece_colour);
 
   ~King();
 
-  virtual bool validMove(string current, string next, ChessBoard* board);
+  virtual bool validMove(string src, string des, ChessBoard* board);
   
 };
 

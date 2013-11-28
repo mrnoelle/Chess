@@ -2,9 +2,10 @@
 #define CHESSBOARD_H
 
 #include <map>
+#include <string>
 #include "ChessPiece.hpp"
 
-//enum Colour {White, Black};
+using namespace std;
 
 class ChessBoard {
 
@@ -13,8 +14,11 @@ class ChessBoard {
   char file;
 
   string nextColour;
+  string KingPos;
+  string attackingPos;
+  string attackingName;
 	
-  map<string, ChessPiece*> cb_state;
+  map<string, ChessPiece*> cb_map;
  
 
  public:
@@ -28,10 +32,14 @@ class ChessBoard {
   ChessPiece* getPos(string position);
 
   bool outBoard(string position);
-  void submitMove(string curPos, string newPos);
-  void updateState(string curPos, string newPos); 
+  void submitMove(string src, string des);
+  void updateMap(string src, string des); 
+ 
+  bool inCheck(string opp_colour);
+  bool checkmate(string opp_colour);
 
-  //int inCheck(string oppCol);
+
+
 };
 
 #endif
