@@ -17,7 +17,8 @@ class ChessBoard {
   string attackingPos;
   string attackingName;	
   map<string, ChessPiece*> cb_map;
- 
+  bool gameover;
+
  public: 
   ChessBoard();
   void resetBoard();

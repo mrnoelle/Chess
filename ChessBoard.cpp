@@ -19,6 +19,7 @@ ChessBoard:: ChessBoard()
 {
 
   resetBoard();
+  gameover = false;
 }
 
 
@@ -137,9 +138,14 @@ bool ChessBoard::outBoard(string position)
 void ChessBoard::submitMove(string src, string des)
 {  
   bool cb_test = true;
-
   string curColour, curName;
 
+  /********** Game is a Checkmate or Stalemate **********/
+  if(gameover){
+    cout << "The Game is Over! You cannot make another move!" << endl;
+    cb_test = false;
+    return ;
+  }
 
   /********** MOVE OUT OF CHESS BOARD **********/
   if (outBoard(src)||outBoard(des))
@@ -223,14 +229,16 @@ void ChessBoard::updateMap(string src, string des)
    
       if (inCheck("Black")){
 
-	if (stalemate("Black"))
+	if (stalemate("Black")){
+	  gameover = true;
 	  cout << "Black is in checkmate" <<endl;
-      
+	}
 	else  
 	  cout << "Black is in check" <<endl;
       }
      
       else if (stalemate("Black")){
+	gameover = true;
 	cout << "The Game is a Stalemate" << endl;
       }
     
@@ -242,14 +250,16 @@ void ChessBoard::updateMap(string src, string des)
     
       if (inCheck("White")){
      
-	if (stalemate("White"))
+	if (stalemate("White")){
+	  gameover = true;
 	  cout << "White is in checkmate" <<endl;
-     
+	}
 	else
 	  cout << "White is in check"<<endl;
       }
 
       else if (stalemate("White")){
+	gameover = true;
 	cout << "The Game is a Stalemate" << endl;
       }
       // Switch the player after the in check test 

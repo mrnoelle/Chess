@@ -33,7 +33,7 @@ int main() {
 
   cb.resetBoard();
   cout << endl;
-
+  
   cb.submitMove("E2", "E4");
   cb.submitMove("E7", "E6");
   cout << endl;
