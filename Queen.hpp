@@ -11,7 +11,7 @@ class Queen: public ChessPiece
   
   ~Queen();
   
-  virtual bool validMove(string current, string next, ChessBoard* board);
+  virtual bool validMove(string src, string des, ChessBoard* board);
 
 };
 

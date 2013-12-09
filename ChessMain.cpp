@@ -5,7 +5,7 @@ using namespace std;
 #include "ChessBoard.hpp"
 
 int main() {
-
+  
   cout << "===========================" << endl;
   cout << "Testing the Chess Engine" << endl;
   cout << "===========================" << endl;
@@ -13,8 +13,7 @@ int main() {
 
   ChessBoard cb;
   cout << endl;
-  cb.printBoard();
-
+   
   cb.submitMove("D7", "D6");
   cout << endl;
 
@@ -26,7 +25,7 @@ int main() {
 
   cb.submitMove("F8", "B4");
   cout << endl;
-  
+
   cout << "===========================" << endl;
   cout << "Alekhine vs. Vasic (1931)" << endl;
   cout << "===========================" << endl;
@@ -43,6 +42,7 @@ int main() {
   cb.submitMove("D7", "D5");
   cout << endl;
 
+  
   cb.submitMove("B1", "C3");
   cb.submitMove("F8", "B4");
   cout << endl;
@@ -50,6 +50,7 @@ int main() {
   cb.submitMove("F1", "D3"); 
   cb.submitMove("B4", "C3");
   cout << endl;
+ 
  
   cb.submitMove("B2", "C3");
   cb.submitMove("H7", "H6");
@@ -63,10 +64,7 @@ int main() {
   cb.submitMove("D5", "E4");
   cout << endl;
 
-  cb.printBoard();
-
   cb.submitMove("D3", "E4");
-  cb.printBoard();
   cb.submitMove("G8", "F6");
   cout << endl;
 
@@ -80,7 +78,6 @@ int main() {
 
   cb.submitMove("D3", "G6");
   cout << endl;
-  
 
   return 0;
 }

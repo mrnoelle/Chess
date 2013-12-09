@@ -12,11 +12,11 @@ Knight::Knight(string piece_name, string piece_colour): ChessPiece(piece_name, p
 
 Knight::~Knight() {}
 
-bool Knight::validMove(string current, string next, ChessBoard* board) 
+bool Knight::validMove(string src, string des, ChessBoard* board) 
 {
   
-  file_change = abs((int)(next[0]-current[0]));
-  rank_change = abs((int)(next[1]-current[1]));
+  int file_change = abs((int)(des[0]-src[0]));
+  int rank_change = abs((int)(des[1]-src[1]));
   /* move forms an "L"-shape */
   if (!((file_change==1 && rank_change==2)||(file_change==2 && rank_change==1)))
     return false;

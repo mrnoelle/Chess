@@ -14,40 +14,37 @@ Rook::Rook (string piece_name, string piece_colour): ChessPiece(piece_name, piec
 
 Rook::~Rook(){}
 
-bool Rook::validMove(string current, string next, ChessBoard* board) 
+bool Rook::validMove(string src, string des, ChessBoard* board) 
 {
-  
-  file_change = abs((int)(next[0]-current[0]));
-  rank_change = abs((int)(next[1]-current[1]));
+  int file_dir = 0;
+  int rank_dir = 0;
+  int file_change = abs((int)(des[0]-src[0]));
+  int rank_change = abs((int)(des[1]-src[1]));
   
   /* move any number of squares along any rank or file */ 
   if (!((file_change==0 && rank_change>0) || (file_change>0 && rank_change==0))) {
     return false;
   }
  
-  /* no leap over other pieces */
-  /* CASE 1: move along a rank */
-  else if (rank_change > 1) { 
+  /* test no leap over */
+  if (file_change > 0)
+    file_dir = (int)(des[0]-src[0])/file_change;
   
-    for (char i=(char)(min(current[1],next[1])+1); i < max(current[1],next[1]); i++) {
-      string position;
-      position += current[0];
-      position += i;
-      if (board -> getPos(position) != NULL)
-	return false;
-	
-      }
+  if (rank_change > 0)
+    rank_dir = (int)(des[1]-src[1])/rank_change; 
+  
+  string pos = src;
+
+  for (int i = 1; i < file_change || i < rank_change; i++) {
+   
+    pos[0] = src[0] + file_dir*i;
+    pos[1] = src[1] + rank_dir*i;
+    if ( board -> getPos(pos) != NULL)
+      return false;
   }
-  /* CASE 2: move along a file */
-  else {
-    for (char i=(char)(min(current[0],next[0])+1); i<max(current[0],next[0]); i++) {
-      string position;
-      position += i;
-      position += current[1];
-      if (board->getPos(position) != NULL)
-	return false;
-    }
-  }
+  
   return true;
 }
+
+
 

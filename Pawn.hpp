@@ -4,11 +4,11 @@
 #include "ChessPiece.hpp"
 
 class Pawn: public ChessPiece {
-private:
-  bool firstMove;
+
+
   
  public:
-  Pawn (string piece_name, string piece_colour, bool _firstMove);
+  Pawn (string piece_name, string piece_colour);
 
   ~Pawn();
   

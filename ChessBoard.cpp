@@ -39,8 +39,6 @@ void ChessBoard:: resetBoard()
       }
   }
   
-
-
   /* Set Pawns for White and Black */ 
   for (rank = '2'; rank <='7'; rank +=5) {
     if (rank=='2')
@@ -52,11 +50,10 @@ void ChessBoard:: resetBoard()
 	string position;
 	position +=(file);
 	position +=(rank);
-	Pawn *p = new Pawn ("Pawn",colour,true);
+	Pawn *p = new Pawn ("Pawn", colour);
 	cb_map[position]=p;
       }
   }
-
   
   /* Set other pieces for White and Black */
   for (rank='1'; rank <= '8'; rank += 7) {
@@ -110,49 +107,10 @@ void ChessBoard::removePieces()
   for(it = cb_map.begin(); it != cb_map.end(); ++it) 
     {
       if (it -> second != NULL) 
-	delete it -> second;
-      
+	delete it -> second;     
     }
+  cb_map.clear();
 }
-
-
-
-void ChessBoard::printBoard() 
-{
-
-  map<string, ChessPiece*>::iterator it;
-  for(it = cb_map.begin(); it != cb_map.end(); ++it)
-    {
-     
-      if (it -> second != NULL) 
-	{
-	  string piece_name = (it->second) -> getName();
-	  string piece_colour = (it->second) -> getColour();
-
-	if (piece_colour=="White") {
-	  if (piece_name=="King")
-        cout << "   w*";
-	  else 
-	    cout << "   w" << piece_name[0];
-	}
-	else {
-	  if (piece_name=="King")
-        cout << "   b*";
-	  else 
-	    cout << "   b" << piece_name[0];
-	}
-      }
-      else 
-	cout << "   " << "__";
-
-      if (it->first[1] == '8')
-	cout << endl << endl;
-
-    }
-  cout << endl << endl;
-}
-
-
 
 
 ChessPiece* ChessBoard::getPos(string position)
@@ -162,8 +120,7 @@ ChessPiece* ChessBoard::getPos(string position)
 }
 
 
-
-
+/* Test if the move is out of board */
 bool ChessBoard::outBoard(string position) 
 {
 
@@ -176,9 +133,7 @@ bool ChessBoard::outBoard(string position)
 }
 
 
-
-
-
+/* Check the move is valid and then excute the move */
 void ChessBoard::submitMove(string src, string des)
 {  
   bool cb_test = true;
@@ -225,8 +180,10 @@ void ChessBoard::submitMove(string src, string des)
    
     /********** VALID MOVE: UPDATE CHESS BOARD **********/
     if( cb_map[src]->validMove(src, des, this) ){
-    
+
+      cb_map[src]->commitMove();    
       updateMap(src, des);
+
     }    
     /********** INVALID MOVE FOR THE PIECE TYPE **********/	
     else
@@ -256,207 +213,123 @@ void ChessBoard::updateMap(string src, string des)
     cb_map.erase(des);
 
   }
-
     cout<<endl;
     cb_map[des] = cb_map[src];
     cb_map[src] = NULL;
-    //cb_map.erase(src);
-
- 
+  
     /********** SWITCH PLAYER & TEST IN CHECK **********/
   
-  if (piece_colour.compare("White")==0) {
+    if (piece_colour.compare("White")==0) {
+   
+      if (inCheck("Black")){
+
+	if (stalemate("Black"))
+	  cout << "Black is in checkmate" <<endl;
       
-    if (inCheck("Black")){
-      if (checkmate("Black")){
-	cout << "Black is in checkmate" <<endl;
+	else  
+	  cout << "Black is in check" <<endl;
       }
-      else
-	cout << "Black is in check" <<endl;
-    }
-    nextColour.assign("Black");
-  }
-
-  else {
-    if (inCheck("White")){
-      if (checkmate("White")){
-	cout << "White is in checkmate" <<endl;
+     
+      else if (stalemate("Black")){
+	cout << "The Game is a Stalemate" << endl;
       }
-      else
-	cout << "White is in check"<<endl;
+    
+      // Switch the player after the in check test 
+      nextColour.assign("Black");
     }
 
-    nextColour.assign("White");
-  }  
+    else {
+    
+      if (inCheck("White")){
+     
+	if (stalemate("White"))
+	  cout << "White is in checkmate" <<endl;
+     
+	else
+	  cout << "White is in check"<<endl;
+      }
+
+      else if (stalemate("White")){
+	cout << "The Game is a Stalemate" << endl;
+      }
+      // Switch the player after the in check test 
+      nextColour.assign("White");
+    }  
  
 }
 
-
-
-
+/* Check whether the king is under immediate attack by the opponent's pieces */
 bool ChessBoard::inCheck(string opp_colour) 
 {
-
   map<string,ChessPiece*>::iterator it;
-  //string KingPos;
-
-  /* Find the position of King */
+ 
+  // Find the position of King
   for (it = cb_map.begin(); it != cb_map.end(); ++it) {
     if(it->second != NULL) {
-	if ((opp_colour.compare(it->second->getColour())==0)&&((it->second->getName()).compare("King")==0)) 
-	  KingPos = it -> first;
-      }
-  }
- 
-  /* Check if there are any pieces can move to King's position */
-    for (it = cb_map.begin(); it != cb_map.end(); ++it) {
-      if(it -> second != NULL) {	 
-	  if (nextColour.compare(it->second->getColour())==0) {
-	    if(it -> second -> validMove(it->first, KingPos, this))
-	      {
-		
-		attackingPos = it->first;
-		attackingName = it->second -> getName();
-		
-	        
-		return true;
-	      }
-	    
-	    }
-	}
+      if ((opp_colour.compare(it->second->getColour())==0)&&((it->second->getName()).compare("King")==0)) 
+	KingPos = it -> first;
     }
+  }
+  // Check if there are any pieces can move to the King's position
+  for (it = cb_map.begin(); it != cb_map.end(); ++it) {
+    if(it -> second != NULL) {
+
+      //Before we finish in check tesing, the nextcolour is still the current player
+      if (nextColour.compare(it->second->getColour())==0) {	   
+	   
+	if(it -> second -> validMove(it->first, KingPos, this))
+	  {	
+	    attackingPos = it->first;
+	    attackingName = it->second -> getName();	
+	    return true;
+	  }	    
+      }
+    }
+  }
     
-    return false;
-
+  return false;
 }
 
 
-
-
-bool ChessBoard::checkmate(string opp_colour)
-{
-  bool in_check = false;
-  ChessPiece* temp_piece;
-
-  //CASE 1: move the King 
-  map<string,ChessPiece*>::iterator it;
-  for (it = cb_map.begin(); it != cb_map.end(); ++it) {
-    if (nextColour.compare(cb_map[KingPos]->getColour())==0) {
-      if(cb_map[KingPos] -> validMove(KingPos, it->first, this)) {
-	
-
-	cb_map[it->first] = cb_map[KingPos];
-	cb_map[KingPos] = NULL;
-	in_check = inCheck(opp_colour);
-	
-	cb_map[KingPos] = cb_map[it->first];
-	cb_map[it->first] = NULL;
-	if(in_check) continue;
-	else 
-	  return false;
-	
-      }
-    } 
-  }
-  
-  //CASE 2: taking attacking piece
-  for (it = cb_map.begin(); it != cb_map.end(); ++it) {
-    if (nextColour.compare(cb_map[KingPos]->getColour())==0) {
-      if(it->second -> validMove(it->first, attackingPos, this)) {
-	temp_piece = cb_map[attackingPos];
-	
-	cb_map[attackingPos] = cb_map[it->first];
-	cb_map[it->first] = NULL;
-	in_check = inCheck(opp_colour);
-	
-	cb_map[it->first] = cb_map[attackingPos];
-	cb_map[attackingPos] = temp_piece;
-	if(in_check) continue;
-	else 
-	  return false;
-      
-      }  
-    }  
-  }
-  
-  //CASE 3: stop the move of attacking piece, if the piece is Queen, Bishop or Rook
-  if(attackingName.compare("Queen")==0 ||
-     attackingName.compare("Bishop")==0 ||
-     attackingName.compare("Rook")==0) {
-      
-      int file_change = abs((int)(KingPos[0]-attackingPos[0]));
-      int rank_change = abs((int)(KingPos[1]-attackingPos[1]));
-   
- 
-      if ((rank_change > 1 || file_change > 1)) {
-	  
-	int file_dir = (int)(KingPos[0]-attackingPos[0])/file_change;
-	int rank_dir = (int)(KingPos[1]-attackingPos[1])/file_change;
-
-	string pos = KingPos;
-
-	for (int i = 1; i < file_change && i< rank_change; i++)
-	  {
-      
-	    pos[0] = KingPos[0] + file_dir*i;
-	    pos[1] = KingPos[1] + rank_dir*i;
-
-	    for (it = cb_map.begin(); it != cb_map.end(); ++it) {
-	      if (nextColour.compare(cb_map[KingPos]->getColour())==0) {
-		if(it->second -> validMove(it->first, pos, this)) {
-
-		  cb_map[pos] = cb_map[it->first];
-		  cb_map[it->first] = NULL;
-		  in_check = inCheck(opp_colour);
-	
-		  cb_map[it->first] = cb_map[pos];
-		  cb_map[pos] = NULL;
-		  if(in_check) continue;
-		  else 
-		    return false;
-      
-		}  
-	      }
-	    }
-	  } 
-      }
-    }
-
-    return true;
-
-}
-
-
-
-/*
-bool ChessBoard::checkmate(string opp_colour)
+/* For each piece, search every possible destination to check whether the king is still under immediate attack */
+bool ChessBoard::stalemate(string opp_colour)
 {
   map<string,ChessPiece*>::iterator itSrc, itDes;
-  bool state = false;
-  //ChessPiece* temp_piece;
+  bool in_check = false;
+  ChessPiece* takenPiece = NULL;
+ 
+  //find the possible destination for each piece, which could result a in check. if we have a valid move, execute the move and then undo it 
+  for (itSrc = cb_map.begin(); itSrc != cb_map.end(); ++itSrc) {
+    for (itDes =cb_map.begin(); itDes != cb_map.end(); ++itDes) {
 
- for (itSrc = cb_map.begin(); itSrc != cb_map.end(); ++itSrc) {
-   for (itDes =cb_map.begin(); itDes != cb_map.end(); ++itDes) {
+      if(itSrc -> second != NULL && (itSrc -> second ->getColour().compare(opp_colour)==0))
+	{
+	  if(itSrc -> second -> validMove(itSrc->first, itDes->first, this) && 
+	     (itDes->second == NULL || 
+	      itDes->second->getColour().compare(opp_colour) != 0)){
+	    //temporarily store the taken piece
+	    takenPiece = itDes->second;
 
-      if(itSrc -> second != NULL)
-	{	 
-	  if (nextColour.compare(itSrc->second->getColour())==0 && nextColour.compare(itDes->second->getColour())!= 0 )
-	    {
-	      if(itSrc -> second -> validMove(itSrc->first, itDes->first, this)){
-		updateMap(itSrc, itDes);
-		if( inCheck )
-		state = true;
-		undoMove(itSrc, itDes);
-	      }
+	    cb_map[itDes->first] = cb_map[itSrc->first];
+	    cb_map[itSrc->first] = NULL;
+
+	    in_check = inCheck(opp_colour);
+	    //undo the move
+	    cb_map[itSrc->first] = cb_map[itDes->first];
+	    cb_map[itDes->first] = takenPiece;
+	    
+	    if(!in_check) {	     
+	      return false;
 	    }
+	  }	    
 	}
     }
- }
+  }
 
+  return true;
 } 
 
 
-*/
 
 
 

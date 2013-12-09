@@ -9,7 +9,7 @@ class Rook:public ChessPiece {
 
   ~Rook();
   
-  virtual bool validMove(string current, string next, ChessBoard* board);
+  virtual bool validMove(string src, string des, ChessBoard* board);
 
 };
 

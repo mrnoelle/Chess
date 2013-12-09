@@ -12,33 +12,22 @@ class ChessBoard {
  private:
   char rank;
   char file;
-
   string nextColour;
   string KingPos;
   string attackingPos;
-  string attackingName;
-	
+  string attackingName;	
   map<string, ChessPiece*> cb_map;
  
-
- public:
- 
+ public: 
   ChessBoard();
   void resetBoard();
   void removePieces();
-
-  void printBoard();
- 
   ChessPiece* getPos(string position);
-
   bool outBoard(string position);
   void submitMove(string src, string des);
-  void updateMap(string src, string des); 
- 
+  void updateMap(string src, string des);  
   bool inCheck(string opp_colour);
-  bool checkmate(string opp_colour);
-
-
+  bool stalemate(string opp_colour);
 
 };
 

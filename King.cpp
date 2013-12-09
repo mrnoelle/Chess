@@ -17,8 +17,8 @@ King::~King(){}
 bool King::validMove(string src, string des, ChessBoard* board) 
 {
 
-  file_change = abs((int)(des[0]-src[0]));
-  rank_change = abs((int)(des[1]-src[1]));
+  int file_change = abs((int)(des[0]-src[0]));
+  int rank_change = abs((int)(des[1]-src[1]));
 
   /* move one square in any direction */
   if ((file_change==1 && rank_change==0)||(file_change==0 && rank_change==1)||(file_change==1 && rank_change==1)) 
