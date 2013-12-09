@@ -12,10 +12,9 @@ class ChessPiece
  protected:
   string name;
   string colour;
-
   bool firstMove;
- public:
- 
+
+ public: 
   ChessPiece(string piece_name, string piece_colour);
   virtual ~ChessPiece();
   string getName() const;

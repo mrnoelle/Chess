@@ -6,7 +6,7 @@ ChessPiece::ChessPiece(string piece_name, string piece_colour)
 {
   name = piece_name;
   colour = piece_colour;
-  firstMove = 1;
+  firstMove = true;
 }
 
 ChessPiece::~ChessPiece()
